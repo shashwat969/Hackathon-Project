@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Emergency Services</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        select, button, input {
+            padding: 8px 12px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3367d6;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .place-card {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+        .place-card h3 {
+            margin-top: 0;
+            color: #1a73e8;
+        }
+        .error {
+            color: #d32f2f;
+            padding: 10px;
+            background-color: #fce8e6;
+            border-radius: 4px;
+        }
+        .attribution {
+            font-size: 12px;
+            margin-top: 20px;
+            color: #666;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+</head>
+<body>
+    <h1>Nearby Emergency Services</h1>
+    
+    <div class="controls">
+        <select id="placeType">
+            <option value="hospital">Hospitals</option>
+            <option value="pharmacy">Pharmacies</option>
+            <option value="police">Police Stations</option>
+            <option value="fire_station">Fire Stations</option>
+            <option value="shelter">Shelters</option>
+            <option value="clinic">Clinics</option>
+        </select>
+        
+        <input type="number" id="radius" placeholder="Radius in km" value="5" min="1" max="20">
+        
+        <button id="findPlaces">Find Nearby</button>
+        <button id="useLocation">Use My Location</button>
+    </div>
+    
+    <div id="map"></div>
+    
+    <div id="results" class="results-container"></div>
+    
+    <p class="attribution">
+        Map data © <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors
+    </p>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // No API key needed for Nominatim
+        let map;
+        let userMarker;
+        let resultMarkers = [];
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([20.5937, 78.9629], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        }
+
+        // Get user's location
+        async function getUserLocation() {
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        position => resolve(position.coords),
+                        error => reject(error)
+                    );
+                } else {
+                    reject(new Error("Geolocation not supported"));
+                }
+            });
+        }
+
+        // Fetch places using Nominatim
+        async function fetchPlaces(lat, lon, placeType, radiusKm) {
+            const typeMap = {
+                'hospital': 'hospital',
+                'pharmacy': 'pharmacy',
+                'police': 'police',
+                'fire_station': 'fire_station',
+                'shelter': 'shelter',
+                'clinic': 'clinic'
+            };
+            
+            const query = typeMap[placeType] || placeType;
+            const radiusDeg = radiusKm * 0.009; // Approximate km to degrees
+            const bbox = `${lon-radiusDeg},${lat-radiusDeg},${lon+radiusDeg},${lat+radiusDeg}`;
+            
+            const url = `https://nominatim.openstreetmap.org/search.php?q=${query}&format=jsonv2&bounded=1&viewbox=${bbox}&limit=15`;
+            
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'User-Agent': 'YourAppName (your@email.com)' // Required by Nominatim
+                    }
+                });
+                
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // (Keep your existing displayPlaces and other functions)
+
+        async function findNearbyPlaces() {
+            const placeType = document.getElementById('placeType').value;
+            const radiusKm = parseInt(document.getElementById('radius').value) || 5;
+            const resultsDiv = document.getElementById('results');
+            
+            resultsDiv.innerHTML = '<p>Searching for places... (using OpenStreetMap)</p>';
+            
+            try {
+                let coords = { latitude: 20.5937, longitude: 78.9629 }; // Default to India
+                try {
+                    coords = await getUserLocation();
+                } catch (geoError) {
+                    console.warn("Using default location");
+                }
+                
+                const places = await fetchPlaces(coords.latitude, coords.longitude, placeType, radiusKm);
+                displayPlaces(places, coords.latitude, coords.longitude);
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="error">
+                        <strong>Error:</strong> ${error.message}<br><br>
+                        OpenStreetMap Usage Notes:<br>
+                        - Limited to 1 request per second<br>
+                        - Requires attribution<br>
+                        - For heavy use, consider LocationIQ
+                    </div>
+                `;
+            }
+        }
+
+        window.onload = function() {
+            initMap();
+            document.getElementById('findPlaces').addEventListener('click', findNearbyPlaces);
+            document.getElementById('useLocation').addEventListener('click', findNearbyPlaces);
+        };
+    </script>
+</body>
+</html>

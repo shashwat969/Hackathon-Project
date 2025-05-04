@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResilienceNet | Next-Gen Disaster Response</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+   
+      
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>ResilienceNet</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#map">Live Map</a></li>
+                    <li><a href="#features">Alerts</a></li>
+                    <li><a href="#features">Donation</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#login" class="btn" style="padding: 8px 16px;">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id ="home"class="hero">
+        <h1>Disaster Management: Saving Lives, Reducing Impact</h1>
+    <p>Disaster management involves preparing for, responding to, and recovering from natural or man-made disasters. Our communities helps in reducing risk, , and providing aid to recover quickly from the calamity.</p>
+        <div class="btn-container">
+            <a href="#features" class="btn">Explore Technology</a>
+            <a href="#download" class="btn btn-outline">Emergency Protocol</a>
+        </div>
+    </section>
+   
+
+    <section id="about" class="container">
+        <div class="section-title">
+            <h2>Why ResilienceNet?</h2>
+            <p>Traditional disaster systems fail when infrastructure collapses. We've built a resilient network that works when you need it most.</p>
+        </div>
+        
+        <div class="features">
+            <a href="chatbot.html" class="feature-card clickable-card">
+                <div class="feature-icon">
+                    <div class="chatbot-float">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                </div>
+                <h3>Chat Bot Assistant</h3>
+               
+            </a>
+            <!-- Other feature cards... -->
+        </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-people-arrows"></i>
+                </div>
+                <h3>RescueLink</h3>
+                <p>Your lifeline in disaster zones — real-time help, updates, and coordination, even on low networks</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <h3>CrisisWatch</h3>
+                <p>Stay informed with live disaster alerts and verified updates from trusted sources.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="container">
+        <div class="section-title">
+            <h2>Innovative Features</h2>
+            <p>Cutting-edge technology designed for the most challenging disaster scenarios</p>
+        </div>
+        
+        <h1>Weather Forecast</h1>
+    
+    <div>
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+    </div>
+    
+    <div id="weatherInfo" class="weather-container" style="display: none;">
+        <h2 id="cityName"></h2>
+        <div id="currentWeather"></div>
+        <h3>5-Day Forecast</h3>
+        <div id="forecast" class="forecast"></div>
+    </div>
+        
+    <h1>Emergency Panic Button</h1>
+    <p>Press the button 3 times quickly to activate</p>
+    
+    <button class="panic-button" id="panicButton">PANIC</button>
+    
+    <div id="statusText" class="status"></div>
+    
+    <div id="map"></div>
+        
+        <div id="contact" class="feature-card" style="margin-top: 2rem;">
+           
+            
+            <iframe src="contact.html" 
+                    style="width: 100%; height: 1000px; border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            </iframe>
+        </div>
+        
+        
+        <!-- In your index.html where you want the news to appear -->
+        <div id="newsWidgetContainer">
+            <iframe src="newsupdate.html" style="width:100%; border:none; min-height:500px; background-repeat:no-repeat"></iframe> 
+          </div>
+                
+    </section>
+    <section class="donation-section">
+        <div class="donation-container">
+          <h2>Support Our Cause</h2>
+          <p class="donation-description">Your generous donation helps us continue our important work. Every contribution makes a difference.</p>
+          
+          <div class="donation-options">
+            <!-- Quick Amount Buttons -->
+            <div class="amount-buttons">
+              <button class="amount-btn" data-amount="10">$10</button>
+              <button class="amount-btn" data-amount="25">$25</button>
+              <button class="amount-btn" data-amount="50">$50</button>
+              <button class="amount-btn" data-amount="100">$100</button>
+              <button class="amount-btn" data-amount="250">$250</button>
+            </div>
+            
+            <!-- Custom Amount Input -->
+            <div class="custom-amount">
+              <label for="custom-amount">Or enter custom amount:</label>
+              <div class="input-group">
+                <span class="currency">$</span>
+                <input type="number" id="custom-amount" min="1" step="1" placeholder="0.00">
+              </div>
+            </div>
+            
+            <!-- Payment Method Selection -->
+            <div class="payment-methods">
+              <h3>Payment Method</h3>
+              <div class="method-options">
+                <label class="method-option">
+                  <input type="radio" name="payment-method" value="credit-card" checked>
+                  <span class="method-icon">💳</span>
+                  <span>Credit Card</span>
+                </label>
+                <label class="method-option">
+                  <input type="radio" name="payment-method" value="paypal">
+                  <span class="method-icon"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal"></span>
+                  <span>PayPal</span>
+                </label>
+                <label class="method-option">
+                  <input type="radio" name="payment-method" value="crypto">
+                  <span class="method-icon">₿</span>
+                  <span>Crypto</span>
+                </label>
+              </div>
+            </div>
+            
+            <!-- Donate Button -->
+            <button class="donate-btn">Donate Now</button>
+            
+            <!-- QR Code Container (initially hidden) -->
+            <div class="qr-container" id="qrContainer" style="display: none;">
+              <h3>Scan to Donate</h3>
+              <img id="qrImage" src="" alt="Donation QR Code" class="qr-image">
+              <p class="qr-instructions">Scan this QR code with your mobile payment app</p>
+              <button class="back-btn" id="backBtn">Back to Donation</button>
+            </div>
+            
+            <!-- Security Badges -->
+            <div class="security-badges">
+              <img src="qr.jpg" alt="QR" width="80"><h3>QR Code</h3>
+              
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <section id="download" class="container" style="text-align: center; padding-bottom: 0;">
+        <div class="section-title">
+            <h2>Be Prepared</h2>
+            <p>Download our app now to ensure you're protected before disaster strikes</p>
+        </div>
+        
+        <div style="max-width: 800px; margin: 0 auto;">
+            <img src="https://cdn.dribbble.com/users/1787323/screenshots/11310802/media/ec7c0e8b8e1a9f9c8dbfd8d8d8d8d8d8.png" 
+                 alt="Mobile AppScreenshots" 
+                 style="width: 100%; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+        </div>
+        
+        <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 2rem;">
+            <a href="#" class="btn" style="background-color: #000; display: flex; align-items: center; gap: 10px;">
+                <i class="fab fa-apple" style="font-size: 1.5rem;"></i>
+                <div style="text-align: left;">
+                    <div style="font-size: 0.7rem;">Download on the</div>
+                    <div style="font-size: 1.2rem; font-weight: 600;">App Store</div>
+                </div>
+            </a>
+            
+            <a href="#" class="btn" style="background-color: #000; display: flex; align-items: center; gap: 10px;">
+                <i class="fab fa-google-play" style="font-size: 1.5rem;"></i>
+                <div style="text-align: left;">
+                    <div style="font-size: 0.7rem;">Get it on</div>
+                    <div style="font-size: 1.2rem; font-weight: 600;">Google Play</div>
+                </div>
+            </a>
+        </div>
+        
+        <div class="offline-feature" style="margin-top: 3rem; text-align: left;">
+            <h3>Offline App Features</h3>
+            <p>The ResilienceNet app includes these critical offline features:</p>
+            <ul style="margin: 1rem 0 1.5rem 1.5rem; columns: 2; column-gap: 2rem;">
+                <li>Offline maps with disaster shelters</li>
+                <li>Emergency procedures library</li>
+                <li>First aid instructions</li>
+                <li>Mesh networking capability</li>
+                <li>Local resource database</li>
+                <li>Signal flare locator</li>
+                <li>Water source finder</li>
+                <li>Emergency contact storage</li>
+            </ul>
+        </div>
+    </section>
+    <!-- Add this anywhere in your body (right before closing </body> is best) -->
+  
+
+   
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>ResilienceNet</h3>
+                <p>Next-generation disaster response technology for when it matters most.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Technology</h3>
+                <ul>
+                    <li><a href="#">Mesh Networking</a></li>
+                    <li><a href="#">Offline Algorithms</a></li>
+                    <li><a href="#">Voice Alarm System</a></li>
+                    <li><a href="#">Low-Bandwidth Tech</a></li>
+                    <li><a href="#">API Documentation</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Emergency Protocols</a></li>
+                    <li><a href="#">Disaster Preparedness</a></li>
+                    <li><a href="#">Volunteer Training</a></li>
+                    <li><a href="#">Research Papers</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Resilience Way</li>
+                    <li><i class="fas fa-phone"></i> +1 (800) RESCUE-NOW</li>
+                    <li><i class="fas fa-envelope"></i> contact@resiliencenet.org</li>
+                    <li><i class="fas fa-exclamation-circle"></i> Emergency SMS: HELP to 12345</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 ResilienceNet. All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- Login Modal Container -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+      <!-- Content will be loaded here from login.html -->
+    </div>
+  </div>
+  
+  <div class="chatbot-launcher">
+    <div class="chatbot-icon" onclick="toggleChatbot()">
+      <img src="cha1.webp" alt="Chat">
+    </div>
+    <div class="chatbot-container" id="chatbotContainer">
+      <iframe src="chatbot.html" frameborder="0"></iframe>
+      <button class="close-chatbot" onclick="toggleChatbot()">×</button>
+    </div>
+  </div>
+  
+  
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+  <script src="login-modal.js"></script> <!-- New file we'll create -->
+    </body>
+    </html>
